@@ -51,7 +51,46 @@ for i, (image, label) in enumerate(ds_train.take(3)):
 plt.tight_layout()
 plt.show() # grafigi gosterme
 
+IMG_SIZE = (180, 180)
+
 # data augmentation + preprocessing
+def preprocess_train(image, label):
+    """
+    resize, random flip, brightness, contrast, crop
+    normalize
+    """
+    image = tf.image.resize(image, IMG_SIZE) # boyutlandırma
+    image = tf.image.random_flip_left_right(image) # yatay olarak rastgele cevirme
+    image = tf.image.random_brightness(image, max_delta=0.1) # rastgele parlaklik
+    image = tf.image.random_contrast(image, lower=0.9, upper=1.2) # rastgele kontrast
+    image = tf.image.random_crop(image, size=(160, 160, 3)) # rastgele crop
+    image = tf.image.resize(image, IMG_SIZE) # tekrar boyutlandirma
+    image = tf.cast(image, tf.float32)/255.0 # normalize etme
+    return image, label
+
+def preprocess_val(image, label):
+    """
+    resize, normalize
+    """
+    image = tf.image.resize(image, IMG_SIZE) # boyutlandırma
+    image = tf.cast(image, tf.float32)/255.0 # normalize etme
+    return image, label
+
+# veri setini hazirlamak
+ds_train = (
+    ds_train
+    .map(preprocess_train, num_parallel_calls=AUTOTUNE) # on isleme ve augmentasyon
+    .shuffle(1000) # karistirma
+    .batch(32) # batch boyutu
+    .prefetch(AUTOTUNE) # veri setini onceden hazirlamak
+)
+
+ds_val = (
+    ds_val
+    .map(preprocess_val, num_parallel_calls=AUTOTUNE) # on isleme
+    .batch(32) # batch boyutu
+    .prefetch(AUTOTUNE) # veri setini onceden hazirlamak
+)
 
 # CNN modelini olusturma
 
