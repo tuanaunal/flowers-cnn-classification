@@ -138,9 +138,31 @@ print(model.summary()) # model ozeti
 history = model.fit(
     ds_train, # egitim veri seti
     validation_data = ds_val, # validasyon veri seti
-    epochs = 2, # epoch sayisi
+    epochs = 10, # epoch sayisi
     callbacks = callbacks, # callback'ler
     verbose = 1 # egitim ilerlemesini goster
 )
 
 # model evaluation
+plt.figure(figsize = (12,5))
+
+# dogruluk grafigi
+plt.subplot(1, 2, 1)
+plt.plot(history.history["accuracy"], label = "Egitim Dogrulugu")
+plt.plot(history.history["val_accuracy"], label = "Validasyon Dogrulugu")
+plt.xlabel("Epoch")
+plt.ylabel("Accuracy")
+plt.title("Model Accuracy")
+plt.legend()
+
+# loss plot
+plt.subplot(1, 2, 2)
+plt.plot(history.history["loss"], label = "Egitim Kaybi")
+plt.plot(history.history["val_loss"], label = "Validasyon Kaybi")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.title("Model Loss")
+plt.legend()
+
+plt.tight_layout()
+plt.show() # grafigi goster
