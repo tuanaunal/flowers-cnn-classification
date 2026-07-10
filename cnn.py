@@ -93,6 +93,25 @@ ds_val = (
 )
 
 # CNN modelini olusturma
+model = Sequential([
+    
+    # Feature Extraction Layers
+    Conv2D(32, (3,3), activation = "relu", input_shape = (*IMG_SIZE, 3)), # 32 filtre, 3x3 kernel, relu aktivasyon, 3 Kanal (RGB)
+    MaxPooling2D((2,2)), # 2x2 max pooling
+    
+    Conv2D(64, (3,3), activation = "relu"), # 64 filtre, 3x3 kernel, relu aktivasyon
+    MaxPooling2D((2,2)), # 2x2 max pooling
+    
+    Conv2D(128, (3,3), activation = "relu"), # 128 filtre, 3x3 kernel, relu aktivasyon
+    MaxPooling2D((2,2)), # 2x2 max pooling
+    
+    # Classification Layers
+    Flatten(), # cok boyutlu veriyi vektore cevir
+    Dense(128, activation = "relu"),
+    Dropout(0.5), # overfitting'i engellemek icin dropout
+    Dense(ds_info.features["label"].num_classes, activation = "softmax") # cikis katmani, softmax aktivasyon
+    
+])
 
 # callbacks
 
