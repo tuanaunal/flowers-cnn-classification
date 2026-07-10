@@ -114,6 +114,16 @@ model = Sequential([
 ])
 
 # callbacks
+callbacks = [
+    # eger val loss 3 epoch boyunca iyilesmezse egitimi durdur ve en iyi agirliklari yukle
+    EarlyStopping(monitor = "val_loss", patience = 3, restore_best_weights = True), # erken durdurma
+    
+    # val loss 2 epoch boyunca iyilesmezse learning rate 0.2 carpani ile azalt
+    ReduceLROnPlateau(monitor = "val_loss", factor = 0.2, patience = 2, verbose = 1, min_lr = 1e-9), # ogrenme oranini azaltma
+    
+    # her epoch sonunda eger model daha iyi ise kaydolur
+    ModelCheckpoint("best_model.keras", save_best_only=True) # model kaydetme, en iyi modeli kaydet
+]
 
 # derleme
 
