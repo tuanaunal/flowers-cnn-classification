@@ -126,7 +126,21 @@ callbacks = [
 ]
 
 # derleme
+model.compile(
+    optimizer = Adam(learning_rate = 0.001), # Adam optimizer, ogrenme oranini 0.001 olarak ayarla
+    loss = "sparse_categorical_crossentropy", # kayyip fonksiyonu, etiketler tamsayi oldugu icin sparse kullan
+    metrics = ["accuracy"] # metrik olarak dogruluk kullan
+)
 
-# traning
+print(model.summary()) # model ozeti
+
+# training
+history = model.fit(
+    ds_train, # egitim veri seti
+    validation_data = ds_val, # validasyon veri seti
+    epochs = 2, # epoch sayisi
+    callbacks = callbacks, # callback'ler
+    verbose = 1 # egitim ilerlemesini goster
+)
 
 # model evaluation
